@@ -10,12 +10,23 @@ GET {{host}}/health
     });
 
     // Assert JSON Response Payload
+    client.test("Response success is true", function() {
+        client.assert(response.body.success === true, "Success is not true");
+    });
+
+    client.test("Response status is 200", function() {
+        client.assert(response.body.status === 200, "Status is not 200");
+    });
+
     client.test("Response message is OK", function() {
         client.assert(response.body.message === 'OK', "Message is not OK");
     });
 
-    // Verify system vitals exist
-    client.test("Uptime metric is present", function() {
-        client.assert(typeof response.body.uptime === 'number', "Uptime is missing or invalid");
+    client.test("Response data.uptime is a number", function() {
+        client.assert(typeof response.body.data.uptime === 'number', "Uptime is missing or invalid");
+    });
+
+    client.test("Response timestamp is valid unix timestamp", function() {
+        client.assert(Number.isInteger(response.body.timestamp), "Timestamp is not a valid unix timestamp");
     });
 %}
