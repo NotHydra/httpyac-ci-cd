@@ -3,19 +3,25 @@ const app = express();
 
 // Best Practice: Versioning or standardizing the route (e.g., /health or /api/health)
 app.get("/health", (req, res) => {
-	const healthCheck = {
-		uptime: process.uptime(),
-		message: "OK",
-		timestamp: Date.now(),
-		// You can also add DB connection status here if applicable
-	};
-
 	try {
-		res.status(200).json(healthCheck);
+		res.status(200).json({
+			success: true,
+			status: 200,
+			message: "OK",
+			data: {
+				uptime: process.uptime(),
+			},
+			timestamp: Date.now(),
+		});
 	} catch (error) {
 		// Catch-all for unexpected internal errors
-		healthCheck.message = error;
-		res.status(503).json(healthCheck);
+		res.status(503).json({
+			success: false,
+			status: 503,
+			message: "Service Unavailable",
+			error: error.message,
+			timestamp: Date.now(),
+		});
 	}
 });
 
