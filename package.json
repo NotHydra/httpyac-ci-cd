@@ -1,0 +1,22 @@
+{
+	"name": "httpyac-ci-cd",
+	"version": "1.0.0",
+	"description": "",
+	"license": "ISC",
+	"author": "",
+	"type": "commonjs",
+	"main": "server.js",
+	"directories": {
+		"tests": "tests"
+	},
+	"scripts": {
+		"start": "node server.js",
+		"test:api": "httpyac send tests/*.http --all"
+	},
+	"dependencies": {
+		"express": "^5.2.1"
+	},
+	"devDependencies": {
+		"httpyac": "^6.16.7"
+	}
+}

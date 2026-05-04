@@ -1,0 +1,21 @@
+@host = http://localhost:3000
+
+### Express API Healthcheck
+GET {{host}}/health
+
+> {%
+    // Assert HTTP Status Code
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    // Assert JSON Response Payload
+    client.test("Response message is OK", function() {
+        client.assert(response.body.message === 'OK', "Message is not OK");
+    });
+
+    // Verify system vitals exist
+    client.test("Uptime metric is present", function() {
+        client.assert(typeof response.body.uptime === 'number', "Uptime is missing or invalid");
+    });
+%}

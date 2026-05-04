@@ -1,0 +1,44 @@
+name: Node.js CI with httpYac
+
+on:
+    push:
+        branches: ["master"]
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+
+              with:
+                  node-version: "20"
+                  cache: "npm"
+
+            - name: Install Dependencies
+              run: npm ci
+
+            # We use 'wait-on' to pause the pipeline until the Express server is actively listening
+            - name: Install wait-on globally
+              run: npm install -g wait-on
+
+            - name: Start Express Server
+              # The '&' runs the server in the background so the pipeline can continue
+              run: npm run start &
+
+              env:
+                  PORT: 3000
+
+            - name: Wait for Server to initialize
+              run: wait-on http://localhost:3000/health --timeout 10000
+
+            - name: Run httpYac Tests Individually
+              # 'send' executes the requests, '--all' runs all requests in the individual file
+              run: npx httpyac send tests/health.http --all
+
+            - name: Run all httpYac Tests
+              run: npm run test:api
