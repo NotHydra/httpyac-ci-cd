@@ -29,4 +29,8 @@ GET {{host}}/health
     client.test("Response timestamp is valid unix timestamp", function() {
         client.assert(Number.isInteger(response.body.timestamp), "Timestamp is not a valid unix timestamp");
     });
+
+    client.test("Response timestamp is valid datetime value", function() {
+        client.assert(!isNaN(Date.parse(new Date(response.body.timestamp * 1000))), "Timestamp is not a valid datetime value");
+    });
 %}
